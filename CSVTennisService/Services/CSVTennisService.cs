@@ -111,5 +111,49 @@ namespace CSVTennisService.Services
 
             return (double)firstSetWinnersWhoWonMatch / totalMatches * 100;
         }
+
+        public (string player, int turnaroundCount) GetPlayerWithMostTurnarounds(List<Models.Match> matches)
+        {
+            var turnaroundCounts = new Dictionary<string, int>();
+
+            foreach (var match in matches)
+            {
+                if (string.IsNullOrEmpty(match.Score)) continue;
+
+                string[] sets = match.Score.Split(' ');
+
+                if (sets.Length == 0) continue;
+
+                string firstSet = sets[0]; // Primeiro set
+                string[] games = firstSet.Split('-');
+
+                if (games.Length != 2) continue;
+
+                if (int.TryParse(games[0], out int winnerGames) && int.TryParse(games[1], out int loserGames))
+                {
+                    bool winnerWonFirstSet = winnerGames > loserGames;
+
+                    if (!winnerWonFirstSet) // Se o vencedor PERDEU o primeiro set, foi uma virada
+                    {
+                        if (!turnaroundCounts.ContainsKey(match.Winner))
+                        {
+                            turnaroundCounts[match.Winner] = 0;
+                        }
+
+                        turnaroundCounts[match.Winner]++;
+                    }
+                }
+            }
+
+            if (turnaroundCounts.Count == 0)
+            {
+                return ("Ninguém", 0);
+            }
+
+            // Encontrar o jogador com mais viradas
+            var topPlayer = turnaroundCounts.OrderByDescending(x => x.Value).First();
+            return (topPlayer.Key, topPlayer.Value);
+        }
+
     }
 }

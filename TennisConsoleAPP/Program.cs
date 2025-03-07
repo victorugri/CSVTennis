@@ -6,10 +6,14 @@ namespace ConsoleApp
         static void Main(string[] args)
         {
             int anoBase = 1968;
-            int anoFinal = 2025;
+            int anoFinal = 2024;
             for (int anoAnalisado = anoBase; anoAnalisado <= anoFinal; anoAnalisado++)
             {
-                string filePath = @$"D:\Downloads\tennis_atp-master\tennis_atp-master\atp_matches_{anoAnalisado}.csv";
+                string baseDirectory = AppContext.BaseDirectory;
+
+                string projectDirectory = Path.GetFullPath(Path.Combine(baseDirectory, @"..\..\..\..\"));
+
+                string filePath = Path.Combine(projectDirectory, "tennis_atp", $"atp_matches_{anoAnalisado}.csv");
 
                 var service = new CSVTennisService.Services.CSVTennisService();
                 var matches = service.ReadMatches(filePath);
@@ -25,6 +29,10 @@ namespace ConsoleApp
                 double percentage = service.CalculateFirstSetWinPercentage(matches);
 
                 Console.WriteLine($"Porcentagem de jogadores que venceram o 1º set e ganharam a partida em {anoAnalisado}: {percentage:F2}%");
+
+                var (topPlayer, turnaroundCount) = service.GetPlayerWithMostTurnarounds(matches);
+
+                Console.WriteLine($"Jogador com mais viradas em {anoAnalisado}: {topPlayer} com {turnaroundCount} viradas.");
             }
         }
     }
