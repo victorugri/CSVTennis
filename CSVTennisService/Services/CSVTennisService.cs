@@ -29,18 +29,69 @@ namespace CSVTennisService.Services
             {
                 var match = new Models.Match
                 {
+                    TourneyId = csv.GetField<string>("tourney_id"),
                     Tournament = csv.GetField<string>("tourney_name"),
                     Surface = csv.GetField<string>("surface"),
-                    Round = csv.GetField<string>("round"),
+                    DrawSize = csv.TryGetField<int?>("draw_size", out var drawSize) ? drawSize ?? 0 : 0,
+                    TourneyLevel = csv.GetField<string>("tourney_level"),
+                    TourneyDate = csv.TryGetField<int?>("tourney_date", out var tourneyDate) ? tourneyDate ?? 0 : 0,
+                    MatchNum = csv.TryGetField<int?>("match_num", out var matchNum) ? matchNum ?? 0 : 0,
+
+                    WinnerId = csv.TryGetField<int?>("winner_id", out var winnerId) ? winnerId ?? 0 : 0,
+                    WinnerSeed = csv.TryGetField<int?>("winner_seed", out var winnerSeed) ? winnerSeed : null,
+                    WinnerEntry = csv.GetField<string>("winner_entry"),
                     Winner = csv.GetField<string>("winner_name"),
+                    WinnerHand = csv.GetField<string>("winner_hand"),
+                    WinnerHeight = csv.TryGetField<int?>("winner_ht", out var winnerHeight) ? winnerHeight : null,
+                    WinnerIoc = csv.GetField<string>("winner_ioc"),
+                    WinnerAge = csv.TryGetField<double?>("winner_age", out var winnerAge) ? winnerAge ?? 0 : 0,
+
+                    LoserId = csv.TryGetField<int?>("loser_id", out var loserId) ? loserId ?? 0 : 0,
+                    LoserSeed = csv.TryGetField<int?>("loser_seed", out var loserSeed) ? loserSeed : null,
+                    LoserEntry = csv.GetField<string>("loser_entry"),
                     Loser = csv.GetField<string>("loser_name"),
+                    LoserHand = csv.GetField<string>("loser_hand"),
+                    LoserHeight = csv.TryGetField<int?>("loser_ht", out var loserHeight) ? loserHeight : null,
+                    LoserIoc = csv.GetField<string>("loser_ioc"),
+                    LoserAge = csv.TryGetField<double?>("loser_age", out var loserAge) ? loserAge ?? 0 : 0,
+
+                    Score = csv.GetField<string>("score"),
+                    BestOf = csv.TryGetField<int?>("best_of", out var bestOf) ? bestOf ?? 0 : 0,
+                    Round = csv.GetField<string>("round"),
+                    Minutes = csv.TryGetField<int?>("minutes", out var minutes) ? minutes : null,
+
+                    WinnerAces = csv.TryGetField<int?>("w_ace", out var wAces) ? wAces ?? 0 : 0,
+                    WinnerDoubleFaults = csv.TryGetField<int?>("w_df", out var wDf) ? wDf ?? 0 : 0,
+                    WinnerServicePoints = csv.TryGetField<int?>("w_svpt", out var wSvpt) ? wSvpt ?? 0 : 0,
+                    WinnerFirstIn = csv.TryGetField<int?>("w_1stIn", out var w1stIn) ? w1stIn ?? 0 : 0,
+                    WinnerFirstWon = csv.TryGetField<int?>("w_1stWon", out var w1stWon) ? w1stWon ?? 0 : 0,
+                    WinnerSecondWon = csv.TryGetField<int?>("w_2ndWon", out var w2ndWon) ? w2ndWon ?? 0 : 0,
+                    WinnerServiceGames = csv.TryGetField<int?>("w_SvGms", out var wSvGms) ? wSvGms ?? 0 : 0,
+                    WinnerBreakPointsSaved = csv.TryGetField<int?>("w_bpSaved", out var wBpSaved) ? wBpSaved ?? 0 : 0,
+                    WinnerBreakPointsFaced = csv.TryGetField<int?>("w_bpFaced", out var wBpFaced) ? wBpFaced ?? 0 : 0,
+
+                    LoserAces = csv.TryGetField<int?>("l_ace", out var lAces) ? lAces ?? 0 : 0,
+                    LoserDoubleFaults = csv.TryGetField<int?>("l_df", out var lDf) ? lDf ?? 0 : 0,
+                    LoserServicePoints = csv.TryGetField<int?>("l_svpt", out var lSvpt) ? lSvpt ?? 0 : 0,
+                    LoserFirstIn = csv.TryGetField<int?>("l_1stIn", out var l1stIn) ? l1stIn ?? 0 : 0,
+                    LoserFirstWon = csv.TryGetField<int?>("l_1stWon", out var l1stWon) ? l1stWon ?? 0 : 0,
+                    LoserSecondWon = csv.TryGetField<int?>("l_2ndWon", out var l2ndWon) ? l2ndWon ?? 0 : 0,
+                    LoserServiceGames = csv.TryGetField<int?>("l_SvGms", out var lSvGms) ? lSvGms ?? 0 : 0,
+                    LoserBreakPointsSaved = csv.TryGetField<int?>("l_bpSaved", out var lBpSaved) ? lBpSaved ?? 0 : 0,
+                    LoserBreakPointsFaced = csv.TryGetField<int?>("l_bpFaced", out var lBpFaced) ? lBpFaced ?? 0 : 0,
+
+                    WinnerRank = csv.TryGetField<int?>("winner_rank", out var winnerRank) ? winnerRank ?? 0 : 0,
+                    WinnerRankPoints = csv.TryGetField<int?>("winner_rank_points", out var winnerRankPoints) ? winnerRankPoints ?? 0 : 0,
+                    LoserRank = csv.TryGetField<int?>("loser_rank", out var loserRank) ? loserRank ?? 0 : 0,
+                    LoserRankPoints = csv.TryGetField<int?>("loser_rank_points", out var loserRankPoints) ? loserRankPoints ?? 0 : 0,
+
                     WinnerGames = ExtractGamesFromScore(csv.GetField<string>("score"), true),
-                    LoserGames = ExtractGamesFromScore(csv.GetField<string>("score"), false),
-                    Score = csv.GetField<string>("score")
+                    LoserGames = ExtractGamesFromScore(csv.GetField<string>("score"), false)
                 };
 
                 matches.Add(match);
             }
+
 
             return matches;
         }
